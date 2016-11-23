@@ -11,23 +11,30 @@ var slide = document.getElementsByClassName('slide')[0],
 
 for(var i=0;i<panels.length;i++){
   panel = panels[i];
-  // panel.onmousedown = function(e){
-  panel.ontouchstart = function(e){
+  panel.onmousedown = function(e){
     leftButtonDown = true;
     startY = e.clientY;
     originTop = Number(slide.style.top.slice(0, -2));
-  }
-  // panel.onmouseup = function(e){
-  panel.ontouchend = function(e){
+}
+  panel.onmouseup = function(e){
+    // this -> the panel mouse click
     leftButtonDown = false;
+    panelHeight = getComputedStyle(this).height.slice(0, -2);
+    position = getComputedStyle(slide).top.slice(0, -2);
+
+    console.log('panelHeight,position,movementY: ',panelHeight,'-',position,'-',movementY);
+
+    distance = movementY>0 ? panelHeight-movementY : -(panelHeight-(-movementY));
+    position = 1*position + distance;
+
+    console.log('distance,position: ',distance, position);
+
+    slide.style.top = position + 'px';
+    slide.style.transition = 'top 1s';
+    // slide.style.top = position + 'px';
+    console.log(position);
   }
-  // panel.onmousemove = function(e){
-  panel.ontouchmove = function(e){
-    var info = '';
-    for(ele in e){
-      info += ele + '<br>';
-    }
-    document.getElementById('indicator').innerHTML = info;
+  panel.onmousemove = function(e){
     if(leftButtonDown){
       endY = e.clientY;
       movementY = endY - startY;
